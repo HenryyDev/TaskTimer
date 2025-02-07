@@ -74,7 +74,7 @@ const Tarefas = () => {
                     alt=""
                   />
                 </button>
-                <b className={tarefa.feito === false ? "finished" : ""}>
+                <b className={tarefa.feito === false ? "" : "finished"}>
                   {tarefa.nome}
                 </b>
               </div>
