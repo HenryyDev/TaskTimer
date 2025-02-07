@@ -1,9 +1,22 @@
 import { useState, useEffect } from "react";
 import "./Cronometro.css";
 const Cronometro = () => {
-  const [segundos, setSegundos] = useState(0);
+  const [segundos, setSegundos] = useState(() => {
+    return parseInt(localStorage.getItem("tempoEstudo")) || 0;
+  });
 
-  const [emExecucao, setEmExecucao] = useState(false);
+  const [emExecucao, setEmExecucao] = useState(() => {
+    return localStorage.getItem("emExecucao") === "true";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("tempoEstudo", segundos);
+  }, [segundos]);
+
+  useEffect(() => {
+    localStorage.setItem("emExecucao", emExecucao);
+  }, [emExecucao]);
+
   useEffect(() => {
     let intervalo;
     if (emExecucao) {
@@ -22,6 +35,8 @@ const Cronometro = () => {
   const resetar = () => {
     setSegundos(0);
     setEmExecucao(false);
+    localStorage.removeItem("tempoEstudo");
+    localStorage.removeItem("emExecucao");
   };
   const minutos = Math.floor(segundos / 60);
   const segundosRestantes = segundos % 60;
