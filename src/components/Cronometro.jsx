@@ -8,6 +8,9 @@ const Cronometro = () => {
   const [emExecucao, setEmExecucao] = useState(() => {
     return localStorage.getItem("emExecucao") === "true";
   });
+  const [inicio, setInicio] = useState(() => {
+    return parseInt(localStorage.getItem) || null;
+  });
 
   useEffect(() => {
     localStorage.setItem("tempoEstudo", segundos);
@@ -20,31 +23,44 @@ const Cronometro = () => {
   useEffect(() => {
     let intervalo;
     if (emExecucao) {
+      const agora = Date.now();
+      if (!inicio) {
+        setInicio(agora);
+        localStorage.getItem("inicio", agora);
+      }
+
       intervalo = setInterval(() => {
-        setSegundos((prevSegundos) => prevSegundos + 1);
+        const tempoDecorrido = Math.floor((Date.now() - inicio) / 1000);
+        setSegundos(tempoDecorrido);
       }, 1000);
     } else {
       clearInterval(intervalo);
     }
     return () => clearInterval(intervalo);
-  }, [emExecucao]);
+  }, [emExecucao, inicio]);
 
   const iniciarPausar = () => {
+    if (!emExecucao) {
+      setInicio(Date.now() - segundos * 1000);
+      localStorage.setItem("inicio", Date.now() - segundos * 1000);
+    }
     setEmExecucao((prev) => !prev);
   };
   const resetar = () => {
     setSegundos(0);
     setEmExecucao(false);
+    setInicio(null);
     localStorage.removeItem("tempoEstudo");
     localStorage.removeItem("emExecucao");
+    ocalStorage.removeItem("inicio");
   };
   const minutos = Math.floor(segundos / 60);
   const segundosRestantes = segundos % 60;
   return (
     <div>
       <h1 className="cronometro">
-        {minutos < 10 ? `0${minutos}` : minutos}:
-        {segundosRestantes < 10 ? `0${segundosRestantes}` : segundosRestantes}
+        {String(minutos).padStart(2, "0")}:
+        {String(segundosRestantes).padStart(2, "0")}
       </h1>
       <button className="btn-cronometro" onClick={iniciarPausar}>
         {emExecucao ? "Pausar" : "Iniciar"}
