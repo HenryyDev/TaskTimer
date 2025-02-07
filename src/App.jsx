@@ -6,8 +6,10 @@ import Tarefas from "./components/Tarefas";
 function App() {
   return (
     <div className="app-container">
-      <Cronometro />
-      <Tarefas />
+      <div className="content">
+        <Cronometro />
+        <Tarefas />
+      </div>
       <Footer />
     </div>
   );
