@@ -14,10 +14,9 @@ const Cronometro = () => {
     return parseInt(localStorage.getItem("inicio")) || null;
   });
   useEffect(() => {
-    document.title = ` ${String(Math.floor(segundos / 60)).padStart(
-      2,
-      "0"
-    )}:${String(segundos % 60).padStart(2, "0")} | TaskTimer`;
+    document.title = `${formatarTempo(minutos)}:${formatarTempo(
+      segundosRestantes
+    )} | TaskTimer`;
   }, [segundos]);
   useEffect(() => {
     localStorage.setItem("tempoEstudo", segundos);
