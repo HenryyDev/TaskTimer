@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Cronometro.css";
+
+const formatarTempo = (tempo) => String(tempo).padStart(2, "0");
 const Cronometro = () => {
   const [segundos, setSegundos] = useState(() => {
     return parseInt(localStorage.getItem("tempoEstudo")) || 0;
@@ -9,26 +11,22 @@ const Cronometro = () => {
     return localStorage.getItem("emExecucao") === "true";
   });
   const [inicio, setInicio] = useState(() => {
-    return parseInt(localStorage.getItem) || null;
+    return parseInt(localStorage.getItem("inicio")) || null;
   });
-
+  useEffect(() => {
+    document.title = ` ${String(Math.floor(segundos / 60)).padStart(
+      2,
+      "0"
+    )}:${String(segundos % 60).padStart(2, "0")} | TaskTimer`;
+  }, [segundos]);
   useEffect(() => {
     localStorage.setItem("tempoEstudo", segundos);
-  }, [segundos]);
-
-  useEffect(() => {
     localStorage.setItem("emExecucao", emExecucao);
-  }, [emExecucao]);
+  }, [segundos, emExecucao]);
 
   useEffect(() => {
     let intervalo;
-    if (emExecucao) {
-      const agora = Date.now();
-      if (!inicio) {
-        setInicio(agora);
-        localStorage.getItem("inicio", agora);
-      }
-
+    if (emExecucao && inicio !== null) {
       intervalo = setInterval(() => {
         const tempoDecorrido = Math.floor((Date.now() - inicio) / 1000);
         setSegundos(tempoDecorrido);
@@ -41,8 +39,9 @@ const Cronometro = () => {
 
   const iniciarPausar = () => {
     if (!emExecucao) {
-      setInicio(Date.now() - segundos * 1000);
-      localStorage.setItem("inicio", Date.now() - segundos * 1000);
+      const novoInicio = Date.now() - segundos * 1000;
+      setInicio(novoInicio);
+      localStorage.setItem("inicio", novoInicio);
     }
     setEmExecucao((prev) => !prev);
   };
@@ -52,15 +51,14 @@ const Cronometro = () => {
     setInicio(null);
     localStorage.removeItem("tempoEstudo");
     localStorage.removeItem("emExecucao");
-    ocalStorage.removeItem("inicio");
+    localStorage.removeItem("inicio");
   };
   const minutos = Math.floor(segundos / 60);
   const segundosRestantes = segundos % 60;
   return (
     <div>
       <h1 className="cronometro">
-        {String(minutos).padStart(2, "0")}:
-        {String(segundosRestantes).padStart(2, "0")}
+        {formatarTempo(minutos)}:{formatarTempo(segundosRestantes)}
       </h1>
       <button className="btn-cronometro" onClick={iniciarPausar}>
         {emExecucao ? "Pausar" : "Iniciar"}
