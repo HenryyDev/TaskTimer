@@ -1,8 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 @font-face {
   font-family: "Digital-7";
   src: url("/fonts/digital-7.ttf") format("truetype");
 }
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 :root {
   --font-timer: "Digital-7", sans-serif;

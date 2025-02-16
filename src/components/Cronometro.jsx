@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import "./Cronometro.css";
 
-const formatarTempo = (tempo) => String(tempo).padStart(2, "0");
+const formatarTempo = (tempo) => String(tempo).padStart(2, "0"); //FUNÇÃO PARA FORMATAR O TEMPO
+
 const Cronometro = () => {
   const [segundos, setSegundos] = useState(() => {
     return parseInt(localStorage.getItem("tempoEstudo")) || 0;
@@ -13,6 +14,7 @@ const Cronometro = () => {
   const [inicio, setInicio] = useState(() => {
     return parseInt(localStorage.getItem("inicio")) || null;
   });
+  //ALTERA O TITULO DA PÁGINA EM TEMPO REAL
   useEffect(() => {
     document.title = `${formatarTempo(minutos)}:${formatarTempo(
       segundosRestantes
@@ -36,6 +38,18 @@ const Cronometro = () => {
     return () => clearInterval(intervalo);
   }, [emExecucao, inicio]);
 
+  useEffect(() => {
+    //PAUSA O TEMPO E SALVA QUANDO FECHA A ABA
+    const salvarAoFecharAba = () => {
+      localStorage.setItem("tempoEstudo", segundos);
+      setEmExecucao(false);
+      localStorage.setItem("emExecucao", emExecucao);
+    };
+    window.addEventListener("beforeunload", salvarAoFecharAba);
+    return () => {
+      window.removeEventListener("beforeunload", salvarAoFecharAba);
+    };
+  }, [segundos, emExecucao]);
   const iniciarPausar = () => {
     if (!emExecucao) {
       const novoInicio = Date.now() - segundos * 1000;
