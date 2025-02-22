@@ -7,9 +7,11 @@ const Tarefas = () => {
 
   useEffect(() => {
     const tarefasSalvas = localStorage.getItem("tarefas");
-    const tarefasParse =
-      tarefasSalvas.length > 0 ? JSON.parse(tarefasSalvas) : [];
+
+    const tarefasParse = tarefasSalvas ? JSON.parse(tarefasSalvas) : [];
+
     setTarefas(tarefasParse);
+
     const maxId =
       tarefasParse.length > 0
         ? tarefasParse.reduce((max, tarefa) => Math.max(max, tarefa.id), 0)
